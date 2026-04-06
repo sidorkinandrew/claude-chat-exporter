@@ -7,8 +7,10 @@ $org = $env:CLAUDE_ORG_ID
 $key = $env:CLAUDE_SESSION_KEY
 $tmp = [System.IO.Path]::GetTempFileName()
 
+$ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0"
+
 function Invoke-CurlUtf8($url) {
-    curl.exe -s $url -H "cookie: sessionKey=$key" -H "accept: application/json" -o $tmp
+    curl.exe -s $url -H "cookie: sessionKey=$key" -H "accept: application/json" -H "user-agent: $ua" -o $tmp
     [System.IO.File]::ReadAllText($tmp, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
 }
 
@@ -30,8 +32,9 @@ do {
         $safeName = $c.name -replace '[\\/:*?"<>|]', '_'
         $filename = "$outDir\$safeName.json"
         Write-Output "  $($c.name)"
-        curl.exe -s "https://claude.ai/api/organizations/$org/chat_conversations/$($c.uuid)?rendering=messages" -H "cookie: sessionKey=$key" -o $filename
+        curl.exe -s "https://claude.ai/api/organizations/$org/chat_conversations/$($c.uuid)?rendering=messages" -H "cookie: sessionKey=$key" -H "user-agent: $ua" -H "referer: https://claude.ai/project/$ProjectId" -H "origin: https://claude.ai" -o $filename
         $chatCount += 1
+        Start-Sleep -Seconds 2
     }
     $count = ($json | Measure-Object).Count
     $offset += $limit
