@@ -1,11 +1,15 @@
 # claude-chat-exported
 
-Usage: .\export-chat.ps1 <conversation_id>
-Set both environment vars as below - 
+Usage: 
+
+.\export-chat.ps1 <conversation_id>
+
+Make sure to set both environment vars as below - 
 $env:CLAUDE_ORG_ID = "your-org-uuid"
 $env:CLAUDE_SESSION_KEY = "your-session-key"
 
 Usage:
+
 .\claude-project-chat-exporter.ps1 -ProjectId <<your-project-id>>
 
 It will:
